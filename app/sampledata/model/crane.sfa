@@ -1,0 +1,68 @@
+{
+  animations: [
+    {
+      clips: [
+        {
+          name: 'fly',
+          runtime_name: 'fly',
+        },
+      ],
+      path: 'sampledata/model/crane.FBX',
+    }
+  ],
+  materials: [
+    {
+      name: '01 - Default',
+      parameters: [
+        {
+          baseColor: [
+            0.58823499999999995,
+            0.58823499999999995,
+            0.58823499999999995,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 0.10000000000000001,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'TexCoord',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'sampledata/model/crane.FBX',
+    name: 'crane',
+    recenter: 'root',
+    scale: 1.2236149999999999,
+  },
+  version: '0.54:2',
+}
