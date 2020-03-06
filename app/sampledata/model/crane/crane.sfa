@@ -4,21 +4,21 @@
       clips: [
         {
           name: 'Take 001',
-          runtime_name: 'andy_dance',
+          runtime_name: 'crane',
         },
       ],
-      path: 'sampledata/model/andy/andy_dance.fbx',
+      path: 'sampledata/model/crane/crane.fbx',
     },
   ],
   materials: [
     {
-      name: '08 - Default',
+      name: '01 - Default',
       parameters: [
         {
           baseColor: [
-            0.35686299999999999,
-            0.60392199999999996,
-            0.35686299999999999,
+            0.58823499999999995,
+            0.58823499999999995,
+            0.58823499999999995,
             1,
           ],
         },
@@ -38,7 +38,7 @@
           metallicMap: null,
         },
         {
-          roughness: 1,
+          roughness: 0.10000000000000001,
         },
         {
           roughnessMap: null,
@@ -59,10 +59,10 @@
       'BoneWeights',
     ],
     collision: {},
-    file: 'sampledata/model/andy/andy_dance.fbx',
-    name: 'andy_dance',
-    recenter: true,
-    scale: 0.1
+    file: 'sampledata/model/crane/crane.fbx',
+    name: 'crane',
+    recenter: 'root',
+    scale: 3,
   },
   version: '0.54:2',
 }

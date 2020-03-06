@@ -1,5 +1,6 @@
-package com.example.arexperimentation
+package com.example.arexperimentation.models
 
+import com.example.arexperimentation.RenderableType
 import com.google.ar.sceneform.NodeParent
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.ux.ArFragment
@@ -8,7 +9,8 @@ import com.google.ar.sceneform.rendering.Color
 class Arrow(arFragment: ArFragment, nodeParent: NodeParent) :
     Model(arFragment, nodeParent) {
 
-    override var renderableType = RenderableType.ARROW
+    override var renderableType =
+        RenderableType.ARROW
 
     override var color = Color(0f, 255f, 0f)
 

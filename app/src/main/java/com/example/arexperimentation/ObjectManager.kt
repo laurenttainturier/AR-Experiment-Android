@@ -1,11 +1,15 @@
 package com.example.arexperimentation
 
 import androidx.lifecycle.MutableLiveData
+import com.example.arexperimentation.models.Crane
+import com.example.arexperimentation.models.Arrow
+import com.example.arexperimentation.models.Egg
 import com.google.ar.core.HitResult
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.math.Quaternion
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.ux.ArFragment
+import kotlinx.coroutines.*
 
 class ObjectManager(
     private val arFragment: ArFragment
@@ -26,17 +30,50 @@ class ObjectManager(
     }
 
     fun addEgg(hitResult: HitResult) {
+        val scene = arFragment.arSceneView.scene
+        val camera = scene.camera
+
         if (arrow == null)
-            arrow = Arrow(arFragment, arFragment.arSceneView.scene.camera)
+            arrow =
+                Arrow(arFragment, camera)
 
         val anchor = hitResult.createAnchor()
         val anchorNode = AnchorNode(anchor)
-        anchorNode.setParent(arFragment.arSceneView.scene)
+        anchorNode.setParent(scene)
 
-        visibleEggs[++eggCount] = Egg(arFragment, anchorNode, eggCount) { eggId ->
-            hideEgg(eggId)
+        val andyHeight = .1f
+        val overviewDuration = 1000L
+
+        val andyPosition = Vector3.add(
+            convertPoseToVector(anchor.pose),
+            camera.up.scaled(andyHeight)
+        )
+
+        val crane = Crane(
+            arFragment,
+            scene,
+            andyPosition
+        )
+
+        crane.linearMove(
+            Vector3.add(andyPosition, camera.left.scaled(.5f)),
+            Vector3.add(andyPosition, camera.right.scaled(.5f)),
+            300, overviewDuration
+        ) {
+            crane.deleteNode()
         }
-        arrow!!.showNode()
+
+        GlobalScope.launch {
+            withContext(Dispatchers.Main) {
+                delay(overviewDuration / 2)
+                visibleEggs[++eggCount] =
+                    Egg(arFragment, anchorNode, eggCount) { eggId ->
+                        hideEgg(eggId)
+                    }
+                delay(overviewDuration / 2)
+                arrow!!.showNode()
+            }
+        }
     }
 
     private fun hideEgg(id: Int) {
@@ -79,7 +116,8 @@ class ObjectManager(
         val closestEgg = arrowDistance.minBy { it.value.length() } ?: return
         val (eggId, direction) = closestEgg
 
-        if (direction.length() < 0.3f) {
+        // hides the arrow if it is too close
+        if (direction.length() < 0.5f) {
             arrow!!.hideNode()
         } else {
             val color = visibleEggs[eggId]!!.color

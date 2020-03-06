@@ -75,3 +75,8 @@ sceneform.asset('sampledata/model/andy/andy_dance.fbx',
         'default',
         'sampledata/model/andy/andy_dance.sfa',
         'src/main/assets/andy_dance')
+
+sceneform.asset('sampledata/model/crane/crane.fbx',
+        'default',
+        'sampledata/model/crane/crane.sfa',
+        'src/main/assets/crane')

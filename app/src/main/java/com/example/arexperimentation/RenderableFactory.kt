@@ -6,7 +6,9 @@ import android.widget.Toast
 import com.google.ar.sceneform.rendering.ModelRenderable
 
 enum class RenderableType(val uri: String) {
+    CRANE("crane.sfb"),
     EGG("egg.sfb"),
+    ANDY("andy_dance.sfb"),
     ARROW("arrow.sfb")
 }
 
@@ -21,8 +23,8 @@ class RenderableFactory {
             }
         }
 
-        fun getRenderable(uri: String) : ModelRenderable? {
-            return renderables[uri]
+        fun getRenderable(type: RenderableType) : ModelRenderable? {
+            return renderables[type.uri]
         }
 
         private fun createRenderable(context: Context, assetUri: String) {

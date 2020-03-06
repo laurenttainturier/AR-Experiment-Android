@@ -1,5 +1,8 @@
-package com.example.arexperimentation
+package com.example.arexperimentation.models
 
+import com.example.arexperimentation.RenderableFactory
+import com.example.arexperimentation.RenderableType
+import com.example.arexperimentation.getBinomialCoeff
 import com.google.ar.sceneform.NodeParent
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.Color
@@ -7,6 +10,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import kotlinx.coroutines.*
+import kotlin.math.pow
 import kotlin.random.Random
 
 abstract class Model(
@@ -23,7 +27,10 @@ abstract class Model(
     val node: TransformableNode = TransformableNode(arFragment.transformationSystem)
 
     fun initializeNode() {
-        modelRenderable = RenderableFactory.getRenderable(renderableType.uri)
+        modelRenderable =
+            RenderableFactory.getRenderable(
+                renderableType
+            )
         node.apply {
             setOnTapListener { _, _ ->
                 onTap()
@@ -32,7 +39,46 @@ abstract class Model(
         }
     }
 
-    fun move(
+    fun curvedMove(
+        controlPoints: List<Vector3>,
+        iterationNumber: Int = 50,
+        duration: Long = 700,
+        onFinished: () -> Unit
+    ) {
+        var t = 0f
+        val dt = 1f / iterationNumber
+        val sleep = duration / iterationNumber
+        val n = controlPoints.size
+        val binomialNCoeff = Array(n) { index ->
+            getBinomialCoeff(n - 1, index)
+        }
+
+        GlobalScope.launch {
+            while (t < 1) {
+                var vector = Vector3()
+                for (i in 0 until n) {
+                    val coeff = binomialNCoeff[i] * (1 - t).pow(n - 1) * t.pow(i)
+                    vector = Vector3.add(
+                        vector,
+                        controlPoints[i].scaled(coeff)
+                    )
+                }
+                /*val pos = controlPoints.foldIndexed(Vector3()) { i, acc, vector ->
+                    // Coeff computed using Bézier curve formula
+                    val coeff = binomialCoeff[i] * (1 - t).pow(n - i) * t.pow(i)
+                    Vector3.add(acc, vector.scaled(coeff))
+                }*/
+                node.worldPosition = vector
+                t += dt
+                delay(sleep)
+            }
+            withContext(Dispatchers.Main) {
+                onFinished()
+            }
+        }
+    }
+
+    fun linearMove(
         origin: Vector3,
         destination: Vector3,
         iterationNumber: Int = 50,
